@@ -1,50 +1,237 @@
-<html>
-	<head>
-		<title>Gadgets</title>
-	</head>
-	<body>
-		
-	</body>
-	
-<script type="text/javascript" src="//vk.com/js/api/openapi.js?150"></script>
-<script type="text/javascript">
-  VK.init({apiId: 6242709});
-</script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="scripts/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/loaders/FBXLoader.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/loaders/MTLLoader.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/loaders/OBJLoader.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/loaders/GLTFLoader.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/libs/fflate.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/21.0.0/tween.umd.js" integrity="sha512-iPPs+A0ew4z+jybQ1r6HPj5b8zV8zaw6TpfGn/qqntA480gp6HDfUJGp1ni46LXrItwnTvYlg80h1NIkC4pf6g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/cannon.js/0.6.2/cannon.min.js" integrity="sha512-avLcnGxl5mqAX/wIKERdb1gFNkOLHh2W5JNCfJm5OugpEPBz7LNXJJ3BDjjwO00AxEY1MqdNjtEmiYhKC0ld7g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-<!-- VK Widget -->
-<div id="vk_auth"></div>
-<script type="text/javascript">
-  VK.Widgets.Auth("vk_auth", {"authUrl":"/dev/Login"});
-</script>
+	<title>ASYK ATU</title>
 
+	<style>
+		@font-face {
+			font-family: 'Bahnschrift';
+			src: '../fonts/Bahnschrift.ttf';
+		}
 
-<!-- Put this script tag to the <head> of your page -->
-<script type="text/javascript" src="//vk.com/js/api/openapi.js?150"></script>
+		* {
+			padding: 0;
+			margin: 0;
+			box-sizing: border-box;
+			font-family: 'Bahnschrift';
+		}
 
-<script type="text/javascript">
-  VK.init({apiId: 6242709, onlyWidgets: true});
-</script>
+		.main {
+			padding: 40px;
+		}
 
-<!-- Put this div tag to the place, where the Poll block will be -->
-<div id="vk_poll"></div>
-<script type="text/javascript">
-VK.Widgets.Poll("vk_poll", {width: "200", height:"100"}, "277650962_a8db394a97fb3be99c");
-</script>
+		.menu {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+		}
 
+		button {
+			display: block;
+			margin: 10px 0;
+			padding: 10px 0;
+			font-size: 16px;
+			width: 180px;
+		}
 
-<script type="text/javascript" src="//vk.com/js/api/openapi.js?150"></script>
+		.modal {
+			display: none;
+			position: fixed;
+			z-index: 1;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			overflow: auto;
+			background-color: rgba(0,0,0,0.4);
+		}
 
-<!-- VK Widget -->
-<div id="vk_groups"></div>
-<script type="text/javascript">
-VK.Widgets.Group("vk_groups", {mode: 4, height: "400", width:"510"}, -259756890);
-</script>
+		.modal-content {
+			background-color: #fefefe;
+			margin: 15% auto;
+			padding: 20px;
+			border: 1px solid #888;
+			border-radius: 15px;
+			width: 60%;
+		}
 
+		.close {
+			color: #aaa;
+			float: right;
+			font-size: 28px;
+			font-weight: bold;
+		}
 
-<h1 class="paragraph">���������� �� �������� "���������":</h1>
-<ul class="spisyka">
-    <li>��������� �� <a href="https://vk.com/dev" target="_blank">�����</a></li>
-    <li>����� ��� ������������ ������� ��������, � �� ����������� ��������� <a href="https://code.sololearn.com/#html" target="_blank">�����</a></li>
-    <li>������ ������, �������� ��� � �������� ������� html!</li>
-</ul>
+		.close:hover,
+		.close:focus {
+			color: black;
+			text-decoration: none;
+			cursor: pointer;
+		}
+
+		.levels {
+			display: flex;
+		}
+
+		.level {
+			margin-top: 15px;
+			margin-right: 15px;
+			cursor: pointer;
+		}
+
+		.levels img {
+			width: 150px;
+			height: 150px;
+			background-position: 50% 50%;
+			background-size: cover;
+			border: 1px solid rgba(0, 0, 0, .5);
+			border-radius: 15px;
+		}
+
+		.leftCount, .rightCount {
+			position: absolute;
+			top: 15px;
+			font-size: 24px;
+			font-weight: bold;
+			visibility: hidden;
+		}
+
+		.leftCount {
+			left: 15px;
+			color: #ffff00;
+		}
+
+		.rightCount {;
+			color: #ff00ff;
+		}
+
+		button {
+			padding: 10px 20px;
+			font-size: 16px;
+			font-weight: bold;
+			text-transform: uppercase;
+			color: #ffffff;
+			background-color: #4CAF50;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			transition: background-color 0.3s ease;
+		}
+
+		button:hover {
+			background-color: #45a049;
+		}
+
+		button:focus {
+			outline: none;
+		}
+
+		.container {
+			display: flex;
+			flex-direction: column;
+			gap: 20px;
+			max-width: 800px;
+			margin: 0 auto;
+		}
+
+		.layer {
+			display: flex;
+			gap: 20px;
+			align-items: center;
+		}
+
+		.text {
+			flex: 1;
+			background-color: #f0f0f0;
+			padding: 20px;
+			border-radius: 10px;
+		}
+
+		.video {
+			flex: 1;
+			background-color: #e0e0e0;
+			border-radius: 10px;
+			overflow: hidden;
+		}
+
+		.video iframe {
+			width: 100%;
+			height: 100%;
+			border: none;
+		}
+
+		button.toMenu {
+			width: 40px;
+			text-align: center;
+			padding-left: 0;
+			padding-right: 0;
+			position: absolute;
+			top: 40px;
+			left: 15px;
+		}
+	}
+
+	</style>
+
+</head>
+<body>
+
+	<button class="toMenu" data-to="main" onclick="window.location.href='https://mpfsn35.github.io/reserve/'; return false;"><</button>
+
+	<div class="main">
+		<div class="container">
+			<!-- Layer 1 -->
+			<div class="layer">
+				<div class="video">
+					<iframe src="videos/video-1.mp4" frameborder="0" allowfullscreen></iframe>
+				</div>
+				<div class="text">
+					<!-- <h2>Layer 1</h2> -->
+					<p>Қазақтың ұлттық ойындарының бірі – асық ойыны. Бұл ойын ертеден мал шаруашылығымен айналысқан ата-бабаларымыздың қолданысында келе жатқан көне ойын түрі.  Ерте кезде әр қазақтың балалары мен жастарының бас қосуының негізінде асық ойыны ойнатылатын. Асық ойыны баланың жастайынан ой-қабілетін шыңдап, дәлдікке, ептілікке, ширақтылыққа, ұстамдылыққа, алғырлыққа, сыйлыстыққа тәрбиелеген.</p>
+					<p>Одна из казахских национальных игр – игра асык. Это древняя игра, которая использовалась нашими предками, которые раньше занимались животноводством. В скором времени на базе всех казахских детей и молодежи была сыграна игра асык. Игра Асық с раннего возраста оттачивала мышление ребенка, воспитывала аккуратность, ловкость, раскованность, сдержанность, решительность, уважение.</p>
+				</div>
+			</div>
+
+			<!-- Layer 2 -->
+			<div class="layer">
+				<div class="text">
+					<!-- <h2>Layer 2</h2> -->
+					<p>Асық — төрт түлік малдың тілерсегінде болатын, қызметі аса күрделі, буынға біткен шымыр сүйек. Қой, ешкі, сиыр, түйе асығы үлкен-кішілігіне қарамастан бір пішіндес, мүсіндес келеді. Ал жылқы асығы басқа пішінде болады. Алшы — асықтың иірілгенде тегіс табаны жерге тиіп, тұрық түсуі. Ойын кезінде оған бірінші дәрежелі мән беріледі. Тәйке (тәуекел сөзінен шыққан) — асықтың иірілгенде шұңқырлау табаны жерге тиіп, тұрық түсуі. Ол екінші дәрежелі мәнге ие. Бүге (бүк түсіп жатуы) — асықтың иірілгенде дөңес жоны үстіне қарап, етпетінен жатық түсуі. Ол үшінші дәрежелі мәнге ие. Шіге (шік) — асықтың иірілгенде шұңқыр құрсақ жағы үстіне қарап, шалқасынан жатық түсуі. Ол төртінші дәрежелі мәнге ие.</p>
+					<p>Существуют несколько основных положений асыков, соответствующих четырем граням кости: Алшы - положение асыка на одном из ребер, при котором вогнутая грань асыка с углублением смотрит вверх. Первая по значимости позиция. Тәйке - положение противоположное алшы. Более ровная грань асыка смотрит вверх. Вторая по значимости позиция. Бүк - положение асыка плашмя, при котором выпуклая сторона смотрит вверх. Третья по значимости позиция. Шік - положение асыка плашмя, при котором вогнутая сторона смотрит вверх. Четвертая по значимости позиция. И три дополнительных положения: омпы - вертикальное положение асыка, при котором острые "рога" лежат снизу, шоңқай - положение противоположное омпы, и редкое положение қынжы (или жантай) - положение при котором асык балансирует на острой грани. </p>
+				</div>
+				<div class="video">
+					<iframe src="videos/video-2.mp4" frameborder="0" allowfullscreen></iframe>
+				</div>
+			</div>
+
+			<!-- Layer 3 -->
+			<div class="layer">
+				<div class="video">
+					<iframe src="videos/video-3.mp4" frameborder="0" allowfullscreen></iframe>
+				</div>
+				<div class="text">
+					<!-- <h2>Layer 3</h2> -->
+					<p>2017 жылы ЮНЕСКО асықты қазақтық ұлттық ойыны ретінде адамзаттың материалды емес құндылығы тізіміне енгізді. Бұл әрине қуантатын жайт, өзге ұлттық ойындарға қарағанда асық ату, бес асық ойыны қарқынды дамып келеді. Төл ойынымызды дәріптеп жүрген ел ағалары, спорттық жаттықтырушылар да жетерлік. Асық біздің ұлттық ойындардың әріппесі деп жатамыз. Қазіргі жасөспірімдердің асыққа қызығатындығы әрине қуантарлық жағдай.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="main.js" type="module"></script>
+
+</body>
 </html>
